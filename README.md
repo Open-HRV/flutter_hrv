@@ -20,9 +20,10 @@ You can calculate using it the following time domain HRV indexes:
 - SDNN
 - RMSSD
 - SDSD
+
 And cohenrence as a frequency domain coeficient as well as the power spectrum of the RR signal 
 
-Package provide also robust filtering which is helpful for calcualting missing peaks within the signal
+Package provide also robust filtering which is helpful for calcualting missing peaks within the signal using moving median filter
 
 ## Getting started
 
