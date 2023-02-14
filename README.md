@@ -26,14 +26,13 @@ And cohenrence as a frequency domain coeficient as well as the power spectrum of
 Package provide also robust filtering which is helpful for calcualting missing peaks within the signal using moving median filter
 
 ## Getting started
-
-scidart 
-powerdart
+This library is using following dart packages:
+- scidart 
+- powerdart
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+
 
 
 ```dart
