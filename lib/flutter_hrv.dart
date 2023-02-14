@@ -1,8 +1,7 @@
 library flutter_hrv;
 
-/// A Calculator.
+/// A HRV Calculator.
 import 'package:scidart/numdart.dart';
-//import 'package:scidart/src/numdart/numdart.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:powerdart/powerdart.dart';
 import 'dart:developer'  as dev;

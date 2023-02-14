@@ -10,6 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  numdart: ^1.0.0
+  powerdart: ^0.0.2
+  scidart: ^0.0.2-dev.12
 
 dev_dependencies:
   flutter_test:
