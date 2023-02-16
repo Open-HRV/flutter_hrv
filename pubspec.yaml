@@ -1,8 +1,7 @@
 name: flutter_hrv
-description: A new Flutter package project.
-version: 0.0.1
-homepage:
-
+description: Dart package to calculate HRV data
+version: 0.0.1-dev.1
+repository: 'https://github.com/Przemekeke/flutter_hrv.git'
 environment:
   sdk: '>=2.18.2 <3.0.0'
   flutter: ">=1.17.0"
