@@ -4,10 +4,9 @@ library flutter_hrv;
 import 'package:scidart/numdart.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:powerdart/powerdart.dart';
-import 'dart:developer'  as dev;
 
 
-double normalize(double? hrvValue, String hrvKey) {
+double _normalize(double? hrvValue, String hrvKey) {
   switch(hrvKey) {
     case 'RMSSD':
       return min((hrvValue! * 100 / 150).round(), 100) - 12;
@@ -23,14 +22,14 @@ extension Ex on double {
 
 class RrsData{
   RrsData(this.x, this.y);
-  final int x;
-  late final int y;
+  final int x; // time offset
+  late final int y; // RR value
 }
 
 class PowerSpectrumData {
   PowerSpectrumData(this.x, this.y);
-  final double x; //frequency
-  late final double y; //spe
+  final double x; // frequency
+  late final double y; // spectrum
 }
 
 class FrequencyDomainData {
@@ -83,9 +82,7 @@ class CalculateHrv{
     var rrs = Array(dataRrs.map((i) => i.y.toDouble()).toList());
     var peaks = _rrsToPeak(rrs, 1);
     final psdRes = psd(peaks, 1);
-    dev.log('data:' + area.toString());
-    dev.log(psdRes.pxx.toString());
-    dev.log(psdRes.f.toString());
+
     out['coh'] = _coherence(psdRes.pxx);
     return FrequencyDomainData(psdRes, out);
   }
@@ -98,7 +95,6 @@ class CalculateHrv{
 
   static Array _rrsToPeak(Array rri, int sampling) {
     Array result = Array([0, (rri[0] / 1000) * sampling]);
-    dev.log(result.toString());
     for (var i = 1; i < rri.length; i++){
       result.add(result[i - 1] + ((rri[i - 1] / 1000) * sampling));
     }
@@ -111,11 +107,11 @@ class CalculateHrv{
   }
 
 // TODO 2 dimensional hrvScore base on the
-  static Array _hrvScore(Map<String, Array> hrvValues) {
+  static Array hrvScore(Map<String, Array> hrvValues) {
     Array result = Array([]);
     for (var i = 0; i < hrvValues.length; i++) {
-      var val = (normalize(hrvValues['RMSSD']![i], "RMSSD") +
-          normalize(hrvValues['SDNN']![i], "SDNN")) / 2;
+      var val = (_normalize(hrvValues['RMSSD']![i], "RMSSD") +
+          _normalize(hrvValues['SDNN']![i], "SDNN")) / 2;
       result.add(val);
     }
     return result;
