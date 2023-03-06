@@ -80,10 +80,19 @@ class CalculateHrv{
   static FrequencyDomainData calcFrequencyDomain(List<RrsData> dataRrs){
     Map<String, double> out = {};
     var rrs = Array(dataRrs.map((i) => i.y.toDouble()).toList());
-    var peaks = _rrsToPeak(rrs, 1);
-    final psdRes = psd(peaks, 1);
+    final psdRes = psd(rrs, 1);
+    final len = psdRes.pxx.length;
+    final lfBottomIndex = (len * 0.08).round();
+    final lfTopIndex = (len * 0.30).round();
+    final hfBottomIndex = lfTopIndex + 1;
+    final hfTopIndex = (len * 0.8).round();
+    final lf = psdRes.pxx.sublist(lfBottomIndex, lfTopIndex).reduce((a, b) => a + b);
+    final hf = psdRes.pxx.sublist(hfBottomIndex, hfTopIndex).reduce((a, b) => a + b);
 
     out['coh'] = _coherence(psdRes.pxx);
+    out['HF'] = hf;
+    out['LF'] = lf;
+    out['LF/HF'] = lf/hf;
     return FrequencyDomainData(psdRes, out);
   }
 
