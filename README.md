@@ -54,9 +54,36 @@ hrvValues.addAll(psd.hrvFrequencyDomain);
   }
 ```
 
+It can be transformed to loop ofc:
+
+```dart
+rrs = [967, 967, 983, 923, 923, 895, 895, 895, 937, 967, 967, 967, 983, 983, 952, ...] # example data
+rrs_data = []
+for (var rr in rrs) {
+    rrs_data.add(RrsData((rrs_data.isEmpty ? 0 : rrs_data.last.x) + rr, rr));
+  }
+```
+
+UPDATA 
+
+You can now use it as well this way
+```dart
+var List<double> rrs = [];
+var Map<String, double> hrvValues = {};
+
+rrs = CalculateHrv.filterPeaksRrs(rrs);
+hrvValues.addAll(CalculateHrv.calcTimeDomainRrs(rrsWindow));
+psd = CalculateHrv.calcFrequencyDomain(rrsWindow);
+hrvValues.addAll(psd.hrvFrequencyDomain);
+```
+
 ## Additional information
 
 TODO:
 - More time domain and frequency domain coeficients 
 - Parametrize filtering
 - Test with more devices
+
+
+For contact, consultation and request:
+przemyslaw.marciniak2@gmail.com
