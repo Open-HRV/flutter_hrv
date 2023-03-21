@@ -46,16 +46,16 @@ class FrequencyDomainData {
 
 class CalculateHrv{
 
-  static List<RrsData> filterPeaks(List<RrsData> dataRrs) {
+  static List<RrsData> filterPeaksRrsData(List<RrsData> dataRrs) {
     var dataArray = Array(dataRrs.map((i) => i.y.toDouble()).toList());
     const threshold = 300;
     var refMedian = median(dataArray.getRangeArray(0, 3));
     for (var i = 3; i < dataArray.length - 4; i++){
-      var refMedian = median(dataArray.getRangeArray(i, i + 3));
+      refMedian = median(dataArray.getRangeArray(i, i + 3));
       if (dataArray.elementAt(i) - refMedian > threshold ||
           refMedian - dataArray.elementAt(i) > threshold) {
         double newValue = (dataArray.elementAt(i + 1) + dataArray.elementAt(i - 1)) / 2;
-        var newData = RrsData(dataRrs[i].x ,newValue.round());
+        var newData = RrsData(dataRrs[i].x, newValue.round());
         dataRrs.replaceRange(i, i + 1, [newData]);
       }
       refMedian = median(dataArray.getRangeArray(i, i + 3));
@@ -63,7 +63,23 @@ class CalculateHrv{
     return dataRrs;
   }
 
-  static Map<String, double> calcTimeDomain(List<RrsData> dataRrs){
+  static List<double> filterPeaksRrs(List<double> rrs) {
+    var dataArray = Array(rrs);
+    const threshold = 300;
+    var refMedian = median(dataArray.getRangeArray(0, 3));
+    for (var i = 3; i < dataArray.length - 4; i++){
+      refMedian = median(dataArray.getRangeArray(i, i + 3));
+      if (dataArray.elementAt(i) - refMedian > threshold ||
+          refMedian - dataArray.elementAt(i) > threshold) {
+        double newValue = (dataArray.elementAt(i + 1) + dataArray.elementAt(i - 1)) / 2;
+        rrs.replaceRange(i, i + 1, [newValue]);
+      }
+      refMedian = median(dataArray.getRangeArray(i, i + 3));
+    }
+    return rrs;
+  }
+
+  static Map<String, double> calcTimeDomainRrsData(List<RrsData> dataRrs){
     var rrs = Array(dataRrs.map((i) => i.y.toDouble()).toList());
     Map<String, double> out = {};
     Array diffRrs = arrayDiff(rrs);
@@ -77,7 +93,21 @@ class CalculateHrv{
     return out;
   }
 
-  static FrequencyDomainData calcFrequencyDomain(List<RrsData> dataRrs){
+  static Map<String, double> calcTimeDomainRrs(List<double> rrs){
+    var rrsArray = Array(rrs);
+    Map<String, double> out = {};
+    Array diffRrs = arrayDiff(rrsArray);
+
+    out['MeanNN'] = mean(rrsArray);
+    out["SDNN"] = standardDeviation(rrsArray);
+
+    out['RMSSD'] = sqrt(mean(arrayPow(diffRrs, 2)));
+    out["SDSD"] = standardDeviation(diffRrs);
+
+    return out;
+  }
+
+  static FrequencyDomainData calcFrequencyDomainRrsData(List<RrsData> dataRrs){
     Map<String, double> out = {};
     var rrs = Array(dataRrs.map((i) => i.y.toDouble()).toList());
     var rrsMean = mean(rrs);
@@ -97,6 +127,28 @@ class CalculateHrv{
     out['LF/HF'] = lf/hf;
     return FrequencyDomainData(psdRes, out);
   }
+
+  static FrequencyDomainData calcFrequencyDomainRrs(List<double> rrs){
+    Map<String, double> out = {};
+    var rrsArray = Array(rrs);
+    var rrsMean = mean(rrsArray);
+    var normRrs = rrsArray.map((rr) => rr - rrsMean).toList();
+    final psdRes = psd(normRrs, 1);
+    final len = psdRes.pxx.length;
+    final lfBottomIndex = (len * 0.08).round();
+    final lfTopIndex = (len * 0.30).round();
+    final hfBottomIndex = lfTopIndex + 1;
+    final hfTopIndex = (len * 0.8).round();
+    final lf = psdRes.pxx.sublist(lfBottomIndex, lfTopIndex).reduce((a, b) => a + b);
+    final hf = psdRes.pxx.sublist(hfBottomIndex, hfTopIndex).reduce((a, b) => a + b);
+
+    out['coh'] = _coherence(psdRes.pxx);
+    out['HF'] = hf;
+    out['LF'] = lf;
+    out['LF/HF'] = lf/hf;
+    return FrequencyDomainData(psdRes, out);
+  }
+
 
 //To Do fix
   static double _coherence (List<double> freq){
