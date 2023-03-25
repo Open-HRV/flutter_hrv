@@ -58,7 +58,7 @@ It can be transformed to loop ofc:
 
 ```dart
 rrs = [967, 967, 983, 923, 923, 895, 895, 895, 937, 967, 967, 967, 983, 983, 952, ...] # example data
-rrs_data = []
+List<RrsData> rrs_data = [];
 for (var rr in rrs) {
     rrs_data.add(RrsData((rrs_data.isEmpty ? 0 : rrs_data.last.x) + rr, rr));
   }
