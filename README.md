@@ -44,8 +44,8 @@ var List<RrsData> rrs = [RrsData(0, 0)]; // Here you aggregate your RR peaks fro
 var Map<String, double> hrvValues = {};
 
 rrs = CalculateHrv.filterPeaks(rrs);
-hrvValues.addAll(CalculateHrv.calcTimeDomain(rrsWindow));
-psd = CalculateHrv.calcFrequencyDomain(rrsWindow);
+hrvValues.addAll(CalculateHrv.calcTimeDomain(rrs));
+psd = CalculateHrv.calcFrequencyDomain(rrs);
 hrvValues.addAll(psd.hrvFrequencyDomain);
 
 // function to aggregate RrsData
