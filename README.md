@@ -72,8 +72,8 @@ var List<double> rrs = [];
 var Map<String, double> hrvValues = {};
 
 rrs = CalculateHrv.filterPeaksRrs(rrs);
-hrvValues.addAll(CalculateHrv.calcTimeDomainRrs(rrsWindow));
-psd = CalculateHrv.calcFrequencyDomain(rrsWindow);
+hrvValues.addAll(CalculateHrv.calcTimeDomainRrs(rrs));
+psd = CalculateHrv.calcFrequencyDomain(rrs);
 hrvValues.addAll(psd.hrvFrequencyDomain);
 ```
 
